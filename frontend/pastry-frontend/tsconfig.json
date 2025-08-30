@@ -1,9 +1,7 @@
+/* Root TypeScript config for Angular 20 */
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -11,19 +9,28 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
-  }
-  ,
+
+    /* ✅ Angular 20 recommended */
+    "target": "ES2022",
+    "useDefineForClassFields": false, // Angular decorators need this
+    "module": "esnext",
+    "moduleResolution": "node",
+
+    /* ✅ Include both Node + Browser globals */
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"]
+  },
+
   "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "typeCheckHostBindings": true,
     "strictTemplates": true
   },
+
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

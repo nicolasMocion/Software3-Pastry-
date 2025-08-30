@@ -1,45 +1,50 @@
 import { pool } from "../config/db.js";
 
+
 export const getProducts = async (req, res) => {
-  try {
-    const result = await pool.query(`
-    SELECT id, category_id, name, description
-    FROM products
-    LIMIT 10;
-  `);
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    res.status(500).json({ error: 'Database Query failed Server Error' });
-  }
+    try {
+        const result = await pool.query(`
+      SELECT id, category_id, name, description, base_price, 
+             preparation_time_hours, image_url, is_customizable, 
+             is_active, is_featured, created_at, updated_at
+      FROM products
+      WHERE is_active = true
+      ORDER BY created_at DESC
+      LIMIT 10;
+    `);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).json({ error: 'Database Query failed Server Error' });
+    }
 };
 
 export const getProductById = async (req, res) => {
-  const { id } = req.params;
+    const { id } = req.params;
 
-   // Validate UUID before querying
-   if (!isUuid(id)) {
-    return res.status(400).json({ error: 'Invalid UUID format' });
-  }
-
-  try {
-    const result = await pool.query(
-      `
-    SELECT id, category_id, name, description
-    FROM products
-    WHERE id = $1;
-  `,
-      [id]
-    );
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Product not found' });
+    // Validate UUID before querying
+    if (!isUuid(id)) {
+        return res.status(400).json({ error: 'Invalid UUID format' });
     }
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error('Error fetching product by ID:', error);
-    res.status(500).json({ error: 'Database Query failed Server Error' });
-  }
-}
+
+    try {
+        const result = await pool.query(`
+      SELECT id, category_id, name, description, base_price, 
+             preparation_time_hours, image_url, is_customizable, 
+             is_active, is_featured, created_at, updated_at
+      FROM products
+      WHERE id = $1;
+    `, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error fetching product by ID:', error);
+        res.status(500).json({ error: 'Database Query failed Server Error' });
+    }
+};
 
 export const createProduct = async (req, res) => {
     const {

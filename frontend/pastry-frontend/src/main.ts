@@ -1,6 +1,24 @@
+import 'zone.js';
+import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { App } from './app/app';
+import { provideHttpClient } from '@angular/common/http';
+import { AppComponent } from './app/app.component';
 
-bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err));
+
+bootstrapApplication(AppComponent, { // Hace a angular pendiente del cliente de manera global
+  providers: [
+    provideHttpClient()
+  ]
+});
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [],
+  templateUrl: './index.html',
+  styleUrl: './styles.css'
+})
+export class App {
+  protected readonly title = signal('pastry-frontend');
+}
