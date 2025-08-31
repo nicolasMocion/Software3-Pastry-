@@ -1,0 +1,85 @@
+const { DataTypes } = require('sequelize');
+const bcrypt = require('bcryptjs');
+
+module.exports = (sequelize) => {
+    const Usuario = sequelize.define('Usuario', {
+        usuario_id: {
+            type: DataTypes.STRING(50),
+            primaryKey: true,
+            allowNull: false
+        },
+        nombre_completo: {
+            type: DataTypes.STRING(100),
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+                len: [2, 100]
+            }
+        },
+        email: {
+            type: DataTypes.STRING(100),
+            allowNull: false,
+            unique: true,
+            validate: {
+                isEmail: true,
+                notEmpty: true
+            }
+        },
+        contrasenia_encript: {
+            type: DataTypes.STRING(300),
+            allowNull: false,
+            validate: {
+                notEmpty: true
+            }
+        },
+        telefono: {
+            type: DataTypes.STRING(20),
+            validate: {
+                is: /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/
+            }
+        },
+        fecha_creacion: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW
+        },
+        estado_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+        rol_usuario_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        }
+    }, {
+        tableName: 'usuario',
+        timestamps: false, // Desactivamos los timestamps automáticos de Sequelize
+        hooks: {
+            beforeCreate: async (usuario) => {
+                if (usuario.contrasenia_encript) {
+                    const saltRounds = 10;
+                    usuario.contrasenia_encript = await bcrypt.hash(usuario.contrasenia_encript, saltRounds);
+                }
+            },
+            beforeUpdate: async (usuario) => {
+                if (usuario.changed('contrasenia_encript')) {
+                    const saltRounds = 10;
+                    usuario.contrasenia_encript = await bcrypt.hash(usuario.contrasenia_encript, saltRounds);
+                }
+            }
+        }
+    });
+
+    // Método para verificar contraseña
+    Usuario.prototype.validarContrasenia = async function(contrasenia) {
+        return await bcrypt.compare(contrasenia, this.contrasenia_encript);
+    };
+
+    // Método para ocultar la contraseña en las respuestas
+    Usuario.prototype.toJSON = function() {
+        const values = Object.assign({}, this.get());
+        delete values.contrasenia_encript;
+        return values;
+    };
+
+    return Usuario;
+};
