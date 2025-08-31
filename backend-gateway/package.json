@@ -9,7 +9,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "db:seed": "node ./src/config/db.js",
+    "db:reset": "npm run db:drop && npm run db:create && npm run db:import && npm run db:seed",
+    "db:import": "psql -U pastry_db -d pastry_db -f database/schemas/DiagramaPasteleria.sql",
+    "db:create": "createdb -U postgres pastry_db",
+    "db:drop": "dropdb -U postgres --if-exists pastry_db"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +28,7 @@
     "pg": "8.16.3"
   },
   "devDependencies": {
+    "@types/node": "^24.3.0",
     "nodemon": "3.1.10"
   }
 }

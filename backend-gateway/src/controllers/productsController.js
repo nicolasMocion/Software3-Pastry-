@@ -4,13 +4,9 @@ import { pool } from "../config/db.js";
 export const getProducts = async (req, res) => {
     try {
         const result = await pool.query(`
-      SELECT id, category_id, name, description, base_price, 
-             preparation_time_hours, image_url, is_customizable, 
-             is_active, is_featured, created_at, updated_at
-      FROM products
-      WHERE is_active = true
-      ORDER BY created_at DESC
-      LIMIT 10;
+        select *
+            from producto
+                     limit 10;
     `);
         res.json(result.rows);
     } catch (error) {

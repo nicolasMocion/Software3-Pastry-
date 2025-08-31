@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductsService, Product } from './services/products.service';
+import { ProductsService, Producto } from './services/products.service';
 import { NgFor } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -8,22 +8,22 @@ import { HttpClientModule } from '@angular/common/http';
   standalone: true,
   imports: [NgFor],
   template: `
-    <h1>Products</h1>
+    <h1>Productos</h1>
     <ul>
-      <li *ngFor="let product of products">
-        {{ product.name }} - {{ '$' + product.base_price }}
+      <li *ngFor="let producto of productos">
+        {{ producto.nombre_prod }} - {{ '$' + producto.precio_unidad }}
       </li>
     </ul>
   `
 })
 export class AppComponent implements OnInit {
-  products: Product[] = [];
+  productos: Producto[] = [];
 
   constructor(private productsService: ProductsService) {}
 
   ngOnInit() {
     this.productsService.getProducts().subscribe({
-      next: (data: Product[]) => this.products = data,
+      next: (data: Producto[]) => this.productos = data,
       error: (err) => console.error('Error fetching products:', err)
     });
   }

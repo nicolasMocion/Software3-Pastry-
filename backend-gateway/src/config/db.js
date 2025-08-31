@@ -1,16 +1,29 @@
-import pkg from 'pg';
-const { Pool } = pkg;
-import dotenv from 'dotenv';
-dotenv.config();
+import { Pool } from 'pg';
+import fs from 'fs';
+import 'dotenv/config';
 
-export const pool = new Pool({
-  user: process.env.DB_USER,        // e.g., 'pastry_user'
-  host: process.env.DB_HOST,        // e.g., 'localhost'
-  database: process.env.DB_NAME,    // e.g., 'pastry_db'
-  password: process.env.DB_PASSWORD,// e.g., 'yourpassword'
-  port: process.env.DB_PORT || 5432
+// Lee el certificado CA (ajusta la ruta según tu entorno)
+const caCert = fs.readFileSync('./ca.pem').toString();
+
+const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
+    ssl: {
+        rejectUnauthorized: true, // ✅ Importante para producción
+        ca: caCert, // Usa el certificado CA
+    },
 });
 
-pool.on('connect', () => {
-  console.log('Connected to the database!');
+// Manejar eventos de error en el pool
+pool.on('error', (err, client) => {
+    console.error('Error inesperado en el cliente de la base de datos', err);
+    process.exit(-1);
 });
+
+// Exportar el pool para su uso en otras partes de la aplicación
+export {
+    pool
+};

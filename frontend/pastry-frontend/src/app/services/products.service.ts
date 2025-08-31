@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 // Interface for Product (aligns with backend fields)
-export interface Product {
-  id?: number;
+export interface Producto {
+  producto_id?: number;
   category_id: number;
-  name: string;
+  nombre_prod: string;
   description: string;
-  base_price: number;
+  precio_unidad: number;
   preparation_time_hours: number;
   image_url: string;
   is_customizable: boolean;
@@ -24,20 +24,20 @@ export class ProductsService {
 
   constructor(private http: HttpClient) {}
 
-  getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.apiUrl);
+  getProducts(): Observable<Producto[]> {
+    return this.http.get<Producto[]>(this.apiUrl);
   }
 
-  getProductById(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+  getProductById(id: number): Observable<Producto> {
+    return this.http.get<Producto>(`${this.apiUrl}/${id}`);
   }
 
-  createProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.apiUrl, product);
+  createProduct(product: Producto): Observable<Producto> {
+    return this.http.post<Producto>(this.apiUrl, product);
   }
 
-  updateProduct(id: number, product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}`, product);
+  updateProduct(id: number, product: Producto): Observable<Producto> {
+    return this.http.put<Producto>(`${this.apiUrl}/${id}`, product);
   }
 
   deleteProduct(id: number): Observable<void> {
