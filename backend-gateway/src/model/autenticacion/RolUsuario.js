@@ -1,6 +1,6 @@
-const { DataTypes } = require('sequelize');
+import  { DataTypes } from 'sequelize';
 
-module.exports = (sequelize) => {
+const RolUsuario = (sequelize) => {
     const RolUsuario = sequelize.define('RolUsuario', {
         rol_usuario_id: {
             type: DataTypes.STRING(50),
@@ -39,3 +39,5 @@ module.exports = (sequelize) => {
 
     return RolUsuario;
 };
+
+export default RolUsuario;

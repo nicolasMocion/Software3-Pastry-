@@ -1,7 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { pool } from "./config/db.js";
+import helmet from 'helmet';
+import morgan from 'morgan';
+
+import sequelize from './config/db.js';
+
 import productsRoutes from './routes/productsRoutes.js';
 //import routerUsuario from './routes/usuarioRoutes.js';
 //import routerAuth from "./routes/authRoutes.js";
@@ -11,61 +15,49 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
+//Middlewares
 app.use(cors());
+app.use(helmet());
+app.use(morgan('combined'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//Hacer asociaciones de los modelos
+import setupAssociations from './model/asociaciones.js';
+setupAssociations();
 
 // Routes
 app.use('/api/products', productsRoutes);
 //app.use('/api/usuario', routerUsuario);
 //app.use('/api/auth', routerUsuario);
 
-// Test DB connection
-pool.query('SELECT NOW()', (err, res) => {
-  if (err) {
-    console.error('DB connection error:', err);
-  } else {
-    console.log('DB connection successful:', res.rows[0]);
-  }
-});
-
-// Ruta de ejemplo que utiliza la base de datos
-app.get('/', async (req, res) => {
-    try {
-        // Ejecutar una consulta simple para verificar la conexión
-        const result = await pool.query('SELECT VERSION()');
-        res.json({
-            message: 'Conexión exitosa a la base de datos',
-            version: result.rows[0].version,
-        });
-    } catch (err) {
-        console.error('Error al consultar la base de datos:', err);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
-
-// Manejo de errores global (opcional pero recomendado)
+// Manejo de errores
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Something broke!');
+    res.status(500).json({
+        error: 'Error interno del servidor',
+        message: process.env.NODE_ENV === 'development' ? err.message : 'Ocurrió un error'
+    });
 });
 
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-
-// Verificar la conexión a la base de datos al iniciar
-async function testConnection() {
+// Inicializar servidor
+const startServer = async () => {
     try {
-        const client = await pool.connect();
-        console.log('Conexión a PostgreSQL establecida correctamente');
-        client.release(); // Liberar el cliente al pool
-    } catch (error) {
-        console.error('Error al conectar con PostgreSQL:', error.message);
-        process.exit(1); // Salir si no hay conexión
-    }
-}
+        // Probar conexión a la base de datos
+        await sequelize.authenticate();
+        console.log('Conexión a la base de datos establecida correctamente.');
 
-testConnection();
+        // Iniciar servidor
+        app.listen(PORT, () => {
+            console.log(`Servidor ejecutándose en el puerto ${PORT}`);
+            console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);
+        });
+    } catch (error) {
+        console.error('No se pudo conectar a la base de datos:', error);
+        process.exit(1);
+    }
+};
+
+// Iniciar la aplicación
+startServer();

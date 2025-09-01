@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
     <h1>Productos</h1>
     <ul>
       <li *ngFor="let producto of productos">
-        {{ producto.nombre_prod }} - {{ '$' + producto.precio_unidad }}
+        {{ producto.product_name }} - {{ '$' + producto.unit_price }}
       </li>
     </ul>
   `

@@ -1,7 +1,7 @@
-const { DataTypes } = require('sequelize');
-const bcrypt = require('bcryptjs');
+import { DataTypes } from 'sequelize';
+import bcrypt from 'bcryptjs';
 
-module.exports = (sequelize) => {
+const Usuario = (sequelize) => {
     const Usuario = sequelize.define('Usuario', {
         usuario_id: {
             type: DataTypes.STRING(50),
@@ -38,11 +38,11 @@ module.exports = (sequelize) => {
                 is: /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/
             }
         },
-        fecha_creacion: {
+        created_at: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW
         },
-        estado_id: {
+        status_id: {
             type: DataTypes.UUID,
             allowNull: false
         },
@@ -78,13 +78,6 @@ module.exports = (sequelize) => {
             as: 'rol'
         });
 
-        // Un usuario pertenece a un estado
-        Usuario.belongsTo(models.Estado, {
-            foreignKey: 'estado_id',
-            targetKey: 'estado_id',
-            as: 'estado'
-        });
-
         // Un usuario puede tener muchos tokens de restablecimiento
         Usuario.hasMany(models.TokenRestablecimiento, {
             foreignKey: 'usuario_id',
@@ -92,35 +85,15 @@ module.exports = (sequelize) => {
             as: 'tokensRestablecimiento'
         });
 
-        // Un usuario puede ser repartidor en muchos pedidos
-        Usuario.hasMany(models.Pedido, {
-            foreignKey: 'repartidor_id',
-            sourceKey: 'usuario_id',
-            as: 'pedidosRepartidor'
-        });
-
-        // Un usuario puede tener muchos pedidos como cliente
-        Usuario.hasMany(models.Pedido, {
-            foreignKey: 'usuario_id',
-            sourceKey: 'usuario_id',
-            as: 'pedidosCliente'
-        });
-
-        // Un usuario puede crear muchos seguimientos de pedidos
-        Usuario.hasMany(models.SeguimientoPedido, {
-            foreignKey: 'usuario_id',
-            sourceKey: 'usuario_id',
-            as: 'seguimientos'
-        });
     };
 
 
-    // Método para verificar contraseña
+    // Metodo para verificar contraseña
     Usuario.prototype.validarContrasenia = async function(contrasenia) {
         return await bcrypt.compare(contrasenia, this.contrasenia_encript);
     };
 
-    // Método para ocultar la contraseña en las respuestas
+    // Metodo para ocultar la contraseña en las respuestas
     Usuario.prototype.toJSON = function() {
         const values = Object.assign({}, this.get());
         delete values.contrasenia_encript;
@@ -129,3 +102,5 @@ module.exports = (sequelize) => {
 
     return Usuario;
 };
+
+export default Usuario;

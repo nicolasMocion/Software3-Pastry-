@@ -1,6 +1,6 @@
-const { DataTypes } = require('sequelize');
+import { DataTypes } from 'sequelize';
 
-module.exports = (sequelize) => {
+const TokenRestablecimiento = (sequelize) => {
     const TokenRestablecimiento = sequelize.define('TokenRestablecimiento', {
         token_reset_id: {
             type: DataTypes.STRING(50),
@@ -26,7 +26,7 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: true
         },
-        fecha_creacion: {
+        created_at: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW
         },
@@ -83,3 +83,5 @@ module.exports = (sequelize) => {
 
     return TokenRestablecimiento;
 };
+
+export default TokenRestablecimiento;
