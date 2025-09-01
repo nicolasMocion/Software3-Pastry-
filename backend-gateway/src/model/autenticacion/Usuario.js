@@ -69,6 +69,52 @@ module.exports = (sequelize) => {
         }
     });
 
+    // Método para configurar asociaciones
+    Usuario.associate = function(models) {
+        // Un usuario pertenece a un rol
+        Usuario.belongsTo(models.RolUsuario, {
+            foreignKey: 'rol_usuario_id',
+            targetKey: 'rol_usuario_id',
+            as: 'rol'
+        });
+
+        // Un usuario pertenece a un estado
+        Usuario.belongsTo(models.Estado, {
+            foreignKey: 'estado_id',
+            targetKey: 'estado_id',
+            as: 'estado'
+        });
+
+        // Un usuario puede tener muchos tokens de restablecimiento
+        Usuario.hasMany(models.TokenRestablecimiento, {
+            foreignKey: 'usuario_id',
+            sourceKey: 'usuario_id',
+            as: 'tokensRestablecimiento'
+        });
+
+        // Un usuario puede ser repartidor en muchos pedidos
+        Usuario.hasMany(models.Pedido, {
+            foreignKey: 'repartidor_id',
+            sourceKey: 'usuario_id',
+            as: 'pedidosRepartidor'
+        });
+
+        // Un usuario puede tener muchos pedidos como cliente
+        Usuario.hasMany(models.Pedido, {
+            foreignKey: 'usuario_id',
+            sourceKey: 'usuario_id',
+            as: 'pedidosCliente'
+        });
+
+        // Un usuario puede crear muchos seguimientos de pedidos
+        Usuario.hasMany(models.SeguimientoPedido, {
+            foreignKey: 'usuario_id',
+            sourceKey: 'usuario_id',
+            as: 'seguimientos'
+        });
+    };
+
+
     // Método para verificar contraseña
     Usuario.prototype.validarContrasenia = async function(contrasenia) {
         return await bcrypt.compare(contrasenia, this.contrasenia_encript);
