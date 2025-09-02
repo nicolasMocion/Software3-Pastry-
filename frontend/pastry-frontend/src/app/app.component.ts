@@ -1,30 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { ProductsService, Producto } from './services/products.service';
-import { NgFor } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NgFor],
+  imports: [RouterOutlet, NavbarComponent, FooterComponent],
   template: `
-    <h1>Productos</h1>
-    <ul>
-      <li *ngFor="let producto of productos">
-        {{ producto.product_name }} - {{ '$' + producto.unit_price }}
-      </li>
-    </ul>
-  `
+    <app-navbar></app-navbar>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+    <app-footer></app-footer>
+  `,
+  styles: [`
+    main {
+      min-height: calc(100vh - 160px);
+    }
+  `]
 })
-export class AppComponent implements OnInit {
-  productos: Producto[] = [];
-
-  constructor(private productsService: ProductsService) {}
-
-  ngOnInit() {
-    this.productsService.getProducts().subscribe({
-      next: (data: Producto[]) => this.productos = data,
-      error: (err) => console.error('Error fetching products:', err)
-    });
-  }
+export class AppComponent {
+  title = 'Misia Juaca - Pastelería Artesanal';
 }

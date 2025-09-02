@@ -1,0 +1,73 @@
+<section class="about-hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="section-title">Nuestra Historia</h1>
+        <p class="hero-description">
+          Misia Juaca nació del amor por la repostería artesanal y el deseo de
+          compartir momentos dulces con nuestra comunidad en Armenia, Quindío.
+        </p>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&h=400&fit=crop"
+             alt="Pastelera trabajando">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="story-section">
+  <div class="container">
+    <div class="story-content">
+      <div class="story-text">
+        <h2>Nuestra Pasión por la Repostería</h2>
+        <p>
+          Desde hace más de una década, Misia Juaca ha sido sinónimo de calidad
+          y sabor en Armenia. Lo que comenzó como un pequeño emprendimiento familiar
+          se ha convertido en una pastelería reconocida por su dedicación a la
+          excelencia y el amor por los detalles.
+        </p>
+        <p>
+          Cada día, nuestro equipo de pasteleros artesanales trabaja desde temprano
+          para crear productos frescos utilizando recetas tradicionales y ingredientes
+          de la más alta calidad. Creemos que cada celebración merece un toque especial,
+          y nos enorgullece ser parte de los momentos más importantes de nuestros clientes.
+        </p>
+        <p>
+          Ubicados en el corazón del Quindío, nos inspiramos en la riqueza cultural
+          y gastronómica de nuestra región para crear sabores únicos que despiertan
+          emociones y crean recuerdos inolvidables.
+        </p>
+      </div>
+      <div class="story-image">
+        <img src="https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=500&h=600&fit=crop"
+             alt="Pastelería artesanal">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="values-section">
+  <div class="container">
+    <h2 class="section-title">Nuestros Valores</h2>
+    <div class="values-grid">
+      <div class="value-card" *ngFor="let value of values">
+        <h3>{{value.title}}</h3>
+        <p>{{value.description}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>¿Quieres conocer más?</h2>
+      <p>Visítanos o contáctanos para hacer tu pedido personalizado</p>
+      <div class="cta-buttons">
+        <a routerLink="/contact" class="btn">Contáctanos</a>
+        <a routerLink="/menu" class="btn btn-outline">Ver Menú</a>
+      </div>
+    </div>
+  </div>
+</section>

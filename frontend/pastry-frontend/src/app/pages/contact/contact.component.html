@@ -1,0 +1,134 @@
+<section class="contact-hero">
+  <div class="container">
+    <h1 class="section-title">Contáctanos</h1>
+    <p class="section-subtitle">
+      Estamos aquí para hacer realidad tus ideas más dulces.
+      Contáctanos para pedidos personalizados o cualquier consulta.
+    </p>
+  </div>
+</section>
+
+<section class="contact-content">
+  <div class="container">
+    <div class="contact-grid">
+      <!-- Contact Form -->
+      <div class="contact-form-section">
+        <h2>Envíanos un mensaje</h2>
+
+        <!-- Success Message -->
+        <div class="success-message" *ngIf="showSuccessMessage">
+          <p>¡Gracias por contactarnos! Te responderemos pronto.</p>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" class="contact-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Nombre *</label>
+              <input
+                type="text"
+                id="name"
+                [(ngModel)]="contactForm.name"
+                name="name"
+                required
+                placeholder="Tu nombre completo">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                [(ngModel)]="contactForm.email"
+                name="email"
+                required
+                placeholder="tu@email.com">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Teléfono</label>
+              <input
+                type="tel"
+                id="phone"
+                [(ngModel)]="contactForm.phone"
+                name="phone"
+                placeholder="+57 300 123 4567">
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Asunto</label>
+              <select
+                id="subject"
+                [(ngModel)]="contactForm.subject"
+                name="subject">
+                <option value="">Seleccionar asunto</option>
+                <option value="pedido">Pedido personalizado</option>
+                <option value="consulta">Consulta general</option>
+                <option value="evento">Evento especial</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Mensaje *</label>
+            <textarea
+              id="message"
+              [(ngModel)]="contactForm.message"
+              name="message"
+              required
+              rows="5"
+              placeholder="Cuéntanos sobre tu pedido o consulta..."></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-submit"
+            [disabled]="!isValidForm() || isSubmitting">
+            <span *ngIf="isSubmitting">Enviando...</span>
+            <span *ngIf="!isSubmitting">Enviar Mensaje</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="contact-info-section">
+        <h2>Información de Contacto</h2>
+
+        <div class="contact-info-grid">
+          <div class="info-card" *ngFor="let info of contactInfo">
+            <div class="info-icon">{{info.icon}}</div>
+            <div class="info-content">
+              <h3>{{info.title}}</h3>
+              <p>{{info.info}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="social-section">
+          <h3>Síguenos en redes sociales</h3>
+          <div class="social-links">
+            <a href="https://facebook.com/misiajuaca" target="_blank" class="social-link">
+              📘 Facebook
+            </a>
+            <a href="https://instagram.com/misiajuaca" target="_blank" class="social-link">
+              📷 Instagram
+            </a>
+            <a href="https://wa.me/573001234567" target="_blank" class="social-link">
+              📱 WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <div class="map-section">
+          <h3>Ubicación</h3>
+          <div class="map-placeholder">
+            <p>Armenia, Quindío, Colombia</p>
+            <p><em>Mapa interactivo próximamente</em></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
