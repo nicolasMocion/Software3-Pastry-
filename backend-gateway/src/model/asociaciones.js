@@ -29,27 +29,27 @@ function setupAssociations() {
 /*
     // MovimientoProducto → Usuario (quien realizó el movimiento)
     MovimientoProducto.belongsTo(Usuario, {
-        foreignKey: 'usuario_id',
-        targetKey: 'usuario_id',
+        foreignKey: 'user_id',
+        targetKey: 'user_id',
         as: 'usuario'
     });
 
     Usuario.hasMany(MovimientoProducto, {
-        foreignKey: 'usuario_id',
-        sourceKey: 'usuario_id',
+        foreignKey: 'user_id',
+        sourceKey: 'user_id',
         as: 'movimientosProducto'
     });
 
     // MovimientoInsumo → Usuario (quien realizó el movimiento)
     MovimientoInsumo.belongsTo(Usuario, {
-        foreignKey: 'usuario_id',
-        targetKey: 'usuario_id',
+        foreignKey: 'user_id',
+        targetKey: 'user_id',
         as: 'usuario'
     });
 
     Usuario.hasMany(MovimientoInsumo, {
-        foreignKey: 'usuario_id',
-        sourceKey: 'usuario_id',
+        foreignKey: 'user_id',
+        sourceKey: 'user_id',
         as: 'movimientosInsumo'
     });
 */
@@ -63,11 +63,11 @@ function setupAssociations() {
 
     // ==================== ASOCIACIONES DE PEDIDOS CON AUTENTICACIÓN ====================
 /*
-    Pedido.belongsTo(Usuario, { foreignKey: 'usuario_id', targetKey: 'usuario_id', as: 'cliente' });
-    Usuario.hasMany(Pedido, { foreignKey: 'usuario_id', sourceKey: 'usuario_id', as: 'pedidosCliente' });
+    Pedido.belongsTo(Usuario, { foreignKey: 'user_id', targetKey: 'user_id', as: 'cliente' });
+    Usuario.hasMany(Pedido, { foreignKey: 'user_id', sourceKey: 'user_id', as: 'pedidosCliente' });
 
-    Pedido.belongsTo(Usuario, { foreignKey: 'repartidor_id', targetKey: 'usuario_id', as: 'repartidor' });
-    Usuario.hasMany(Pedido, { foreignKey: 'repartidor_id', sourceKey: 'usuario_id', as: 'pedidosRepartidor' });
+    Pedido.belongsTo(Usuario, { foreignKey: 'repartidor_id', targetKey: 'user_id', as: 'repartidor' });
+    Usuario.hasMany(Pedido, { foreignKey: 'repartidor_id', sourceKey: 'user_id', as: 'pedidosRepartidor' });
 */
 
 
@@ -76,8 +76,8 @@ function setupAssociations() {
     SeguimientoPedido.belongsTo(Pedido, { foreignKey: 'pedido_id', targetKey: 'pedido_id', as: 'pedido' });
     Pedido.hasMany(SeguimientoPedido, { foreignKey: 'pedido_id', sourceKey: 'pedido_id', as: 'seguimientos' });
 
-    SeguimientoPedido.belongsTo(Usuario, { foreignKey: 'usuario_id', targetKey: 'usuario_id', as: 'usuario' });
-    Usuario.hasMany(SeguimientoPedido, { foreignKey: 'usuario_id', sourceKey: 'usuario_id', as: 'seguimientos' });
+    SeguimientoPedido.belongsTo(Usuario, { foreignKey: 'user_id', targetKey: 'user_id', as: 'usuario' });
+    Usuario.hasMany(SeguimientoPedido, { foreignKey: 'user_id', sourceKey: 'user_id', as: 'seguimientos' });
 */
 
 

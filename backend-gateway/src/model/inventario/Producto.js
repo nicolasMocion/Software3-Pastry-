@@ -132,7 +132,7 @@ const Producto = (sequelize) => {
 
     // Métodos de instancia
     Product.prototype.estaDisponible = function() {
-        return this.current_stock > 0 && this.status_id === 'activo';
+        return this.current_stock > 0 && this.status_id === 'active';
     };
 
     Product.prototype.necesitaReposicion = function() {
@@ -177,7 +177,7 @@ const Producto = (sequelize) => {
 
     Product.findProductosActivos = function() {
         return this.findAll({
-            where: { status_id: 'activo' },
+            where: { status_id: 'active' },
             include: [{ model: this.sequelize.models.CategoriaProducto, as: 'categoria' }]
         });
     };

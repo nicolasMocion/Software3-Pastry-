@@ -8,7 +8,7 @@ import sequelize from './config/db.js';
 
 import productsRoutes from './routes/productsRoutes.js';
 //import routerUsuario from './routes/usuarioRoutes.js';
-//import routerAuth from "./routes/authRoutes.js";
+import routerAuth from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -30,7 +30,7 @@ setupAssociations();
 // Routes
 app.use('/api/products', productsRoutes);
 //app.use('/api/usuario', routerUsuario);
-//app.use('/api/auth', routerUsuario);
+app.use('/api/auth', routerAuth);
 
 // Manejo de errores
 app.use((err, req, res, next) => {

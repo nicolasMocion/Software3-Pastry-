@@ -44,12 +44,12 @@ const Estado = (sequelize) => {
         return this.findAll({ where: { entidad } });
     };
 
-    // Metodo de clase para obtener estado activo de usuario
+    // Metodo de clase para obtener estado active de usuario
     Estado.getEstadoActivoUsuario = function() {
         return this.findOne({
             where: {
                 entity: 'usuario',
-                name: 'activo'
+                name: 'active'
             }
         });
     };
@@ -62,6 +62,17 @@ const Estado = (sequelize) => {
                 name: 'inactivo'
             }
         });
+    };
+
+    //metodo para obtener id de un estado segun la entidad y el nombre del estado
+    Estado.getIdEstadoByEntityAndName = async function(entity, name) {
+        const estado = await this.findOne({
+            where: {
+                entity: entity,
+                name: name
+            },
+            raw:true});
+        return  estado.status_id;
     };
 
     return Estado;

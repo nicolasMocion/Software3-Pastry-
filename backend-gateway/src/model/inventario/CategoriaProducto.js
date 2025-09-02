@@ -56,7 +56,7 @@ const CategoriaProducto = (sequelize) => {
             include: [{
                 model: this.sequelize.models.Producto,
                 as: 'productos',
-                where: { status_id: 'activo' },
+                where: { status_id: 'active' },
                 required: false
             }]
         });

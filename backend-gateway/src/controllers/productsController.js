@@ -40,7 +40,7 @@ export const crearProducto = async (req, res) => {
             preparation_time_min: tiempo_preparacion_min || 0,
             customizable: personalizable || false,
             product_category_id: categoria_prod_id,
-            status_id: estado_id || 'activo'
+            status_id: estado_id || 'active'
         });
 
         // Cargar la categoría relacionada

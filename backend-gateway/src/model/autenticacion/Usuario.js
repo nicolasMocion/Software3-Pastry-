@@ -2,13 +2,15 @@ import { DataTypes } from 'sequelize';
 import bcrypt from 'bcryptjs';
 
 const Usuario = (sequelize) => {
-    const Usuario = sequelize.define('Usuario', {
-        usuario_id: {
-            type: DataTypes.STRING(50),
+    const User = sequelize.define('User', {
+        user_id: {
+            type: DataTypes.UUID,
+            //automaticamente se crea un UUID
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             allowNull: false
         },
-        nombre_completo: {
+        full_name: {
             type: DataTypes.STRING(100),
             allowNull: false,
             validate: {
@@ -25,14 +27,14 @@ const Usuario = (sequelize) => {
                 notEmpty: true
             }
         },
-        contrasenia_encript: {
+        encrypted_password: {
             type: DataTypes.STRING(300),
             allowNull: false,
             validate: {
                 notEmpty: true
             }
         },
-        telefono: {
+        phone: {
             type: DataTypes.STRING(20),
             validate: {
                 is: /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/
@@ -46,61 +48,62 @@ const Usuario = (sequelize) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        rol_usuario_id: {
+        user_role_id: {
             type: DataTypes.UUID,
             allowNull: false
         }
     }, {
-        tableName: 'usuario',
+        tableName: 'user',
         timestamps: false, // Desactivamos los timestamps automáticos de Sequelize
         hooks: {
+            //encriptacion de la contraseña
             beforeCreate: async (usuario) => {
-                if (usuario.contrasenia_encript) {
+                if (usuario.encrypted_password) {
                     const saltRounds = 10;
-                    usuario.contrasenia_encript = await bcrypt.hash(usuario.contrasenia_encript, saltRounds);
+                    usuario.encrypted_password = await bcrypt.hash(usuario.encrypted_password, saltRounds);
                 }
             },
             beforeUpdate: async (usuario) => {
-                if (usuario.changed('contrasenia_encript')) {
+                if (usuario.changed('encrypted_password')) {
                     const saltRounds = 10;
-                    usuario.contrasenia_encript = await bcrypt.hash(usuario.contrasenia_encript, saltRounds);
+                    usuario.encrypted_password = await bcrypt.hash(usuario.encrypted_password, saltRounds);
                 }
             }
         }
     });
 
-    // Método para configurar asociaciones
-    Usuario.associate = function(models) {
+    // Metodo para configurar asociaciones
+    User.associate = function(models) {
         // Un usuario pertenece a un rol
-        Usuario.belongsTo(models.RolUsuario, {
-            foreignKey: 'rol_usuario_id',
-            targetKey: 'rol_usuario_id',
+        User.belongsTo(models.RolUsuario, {
+            foreignKey: 'user_role_id',
+            targetKey: 'user_role_id',
             as: 'rol'
         });
 
         // Un usuario puede tener muchos tokens de restablecimiento
-        Usuario.hasMany(models.TokenRestablecimiento, {
-            foreignKey: 'usuario_id',
-            sourceKey: 'usuario_id',
+        User.hasMany(models.TokenRestablecimiento, {
+            foreignKey: 'user_id',
+            sourceKey: 'user_id',
             as: 'tokensRestablecimiento'
         });
 
     };
 
-
     // Metodo para verificar contraseña
-    Usuario.prototype.validarContrasenia = async function(contrasenia) {
-        return await bcrypt.compare(contrasenia, this.contrasenia_encript);
+    User.prototype.validarContrasenia = async function(contrasenia) {
+        return await bcrypt.compare(contrasenia, this.encrypted_password);
     };
 
+
     // Metodo para ocultar la contraseña en las respuestas
-    Usuario.prototype.toJSON = function() {
+    User.prototype.toJSON = function() {
         const values = Object.assign({}, this.get());
-        delete values.contrasenia_encript;
+        delete values.encrypted_password;
         return values;
     };
 
-    return Usuario;
+    return User;
 };
 
 export default Usuario;
