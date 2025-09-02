@@ -1,0 +1,50 @@
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="container">
+      <div class="hero-text">
+        <h1 class="hero-title">Bienvenidos a Misia Juaca</h1>
+        <p class="hero-subtitle">
+          Pastelería artesanal en Armenia, Quindío.
+          Endulzamos tus momentos especiales con amor y tradición.
+        </p>
+        <div class="hero-buttons">
+          <a routerLink="/menu" class="btn">Ver Nuestro Menú</a>
+          <a routerLink="/contact" class="btn btn-outline">Hacer Pedido</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&h=400&fit=crop"
+             alt="Deliciosas tortas artesanales">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+  <div class="container">
+    <h2 class="section-title">¿Por qué elegir Misia Juaca?</h2>
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of features">
+        <div class="feature-icon">{{feature.icon}}</div>
+        <h3>{{feature.title}}</h3>
+        <p>{{feature.description}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>¿Listo para endulzar tu día?</h2>
+      <p>Descubre nuestros deliciosos productos artesanales</p>
+      <div class="cta-buttons">
+        <a routerLink="/menu" class="btn">Explorar Menú</a>
+        <a routerLink="/about" class="btn btn-outline">Conocer Más</a>
+      </div>
+    </div>
+  </div>
+</section>

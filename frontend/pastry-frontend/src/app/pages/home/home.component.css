@@ -1,0 +1,140 @@
+.hero {
+  background: linear-gradient(135deg, var(--vinotinto-light) 0%, var(--vinotinto) 100%);
+  color: var(--white);
+  padding: 4rem 0;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero-content .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: var(--shadow-hover);
+}
+
+.features {
+  padding: 5rem 0;
+  background-color: var(--gray-light);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.feature-card {
+  background-color: var(--white);
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+  color: var(--vinotinto);
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card p {
+  line-height: 1.6;
+  color: var(--black);
+}
+
+.cta-section {
+  background-color: var(--black);
+  color: var(--white);
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.cta-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--white);
+}
+
+.cta-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .hero-content .container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .hero-buttons,
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-buttons .btn,
+  .cta-buttons .btn {
+    width: 200px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}

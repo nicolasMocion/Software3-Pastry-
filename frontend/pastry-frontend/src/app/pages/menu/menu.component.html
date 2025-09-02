@@ -1,0 +1,52 @@
+<section class="menu-hero">
+  <div class="container">
+    <h1 class="section-title">Nuestro Menú</h1>
+    <p class="section-subtitle">
+      Descubre nuestras deliciosas creaciones artesanales,
+      elaboradas con ingredientes frescos y mucho amor.
+    </p>
+  </div>
+</section>
+
+<section class="menu-content">
+  <div class="container">
+    <!-- Category Filter -->
+    <div class="category-filter">
+      <button
+        *ngFor="let category of categories"
+        [class.active]="selectedCategory === category.value"
+        (click)="filterByCategory(category.value)"
+        class="filter-btn">
+        {{category.label}}
+      </button>
+    </div>
+
+    <!-- Menu Items Grid -->
+    <div class="menu-grid">
+      <div class="menu-item" *ngFor="let pastry of filteredPastries">
+        <div class="item-image">
+          <img [src]="pastry.image" [alt]="pastry.name">
+          <div class="item-overlay" *ngIf="!pastry.available">
+            <span>No Disponible</span>
+          </div>
+        </div>
+        <div class="item-content">
+          <h3 class="item-name">{{pastry.name}}</h3>
+          <p class="item-description">{{pastry.description}}</p>
+          <div class="item-footer">
+            <span class="item-price">{{formatPrice(pastry.price)}}</span>
+            <button class="btn btn-sm" [disabled]="!pastry.available">
+              {{pastry.available ? 'Pedir' : 'No Disponible'}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredPastries.length === 0">
+      <h3>No hay productos en esta categoría</h3>
+      <p>Explora otras categorías para encontrar deliciosas opciones</p>
+    </div>
+  </div>
+</section>

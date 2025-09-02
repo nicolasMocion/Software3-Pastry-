@@ -1,0 +1,33 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Misia Juaca</h3>
+        <p>Pastelería artesanal con amor y tradición desde Armenia, Quindío.</p>
+      </div>
+
+      <div class="footer-section">
+        <h4>Contacto</h4>
+        <p>📍 Armenia, Quindío, Colombia</p>
+        <p>📞 +57 300 123 4567</p>
+        <p>✉️ info@misiajuaca.com</p>
+      </div>
+
+      <div class="footer-section">
+        <h4>Síguenos</h4>
+        <div class="social-links">
+          <a *ngFor="let social of socialLinks"
+             [href]="social.url"
+             target="_blank"
+             rel="noopener noreferrer">
+            {{social.icon}} {{social.name}}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {{currentYear}} Misia Juaca. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>

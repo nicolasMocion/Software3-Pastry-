@@ -1,0 +1,33 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-brand">
+      <a routerLink="/" (click)="closeMenu()">
+        <h1 style="bottom: 10px;">Misia Juaca</h1>
+      </a>
+    </div>
+
+    <button class="nav-toggle" (click)="toggleMenu()" [class.active]="isMenuOpen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="nav-menu" [class.active]="isMenuOpen">
+      <li class="nav-item">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/menu" routerLinkActive="active" (click)="closeMenu()">Menú</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">Nosotros</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contacto</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/login" routerLinkActive="active" (click)="closeMenu()">Login</a>
+      </li>
+    </ul>
+  </div>
+</nav>
