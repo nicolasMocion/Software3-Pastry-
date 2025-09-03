@@ -1,147 +1,96 @@
-import { pool } from "../config/db.js";
+import { Producto, CategoriaProducto } from '../model/inventario/index.js';
 
-
-export const getProducts = async (req, res) => {
+// Obtener todos los productos con sus categorías
+export const obtenerProductos = async (req, res) => {
     try {
-        const result = await pool.query(`
-      SELECT id, category_id, name, description, base_price, 
-             preparation_time_hours, image_url, is_customizable, 
-             is_active, is_featured, created_at, updated_at
-      FROM products
-      WHERE is_active = true
-      ORDER BY created_at DESC
-      LIMIT 10;
-    `);
-        res.json(result.rows);
+        const productos = await Producto.findAll({
+            include: [{ model: CategoriaProducto, as: 'categoria' }],
+            order: [['product_name', 'ASC']]
+        });
+
+        res.json(productos);
     } catch (error) {
-        console.error('Error fetching products:', error);
-        res.status(500).json({ error: 'Database Query failed Server Error' });
+        res.status(500).json({ error: error.message });
     }
 };
 
-export const getProductById = async (req, res) => {
-    const { id } = req.params;
-
-    // Validate UUID before querying
-    if (!isUuid(id)) {
-        return res.status(400).json({ error: 'Invalid UUID format' });
-    }
-
+// Crear un nuevo producto
+export const crearProducto = async (req, res) => {
     try {
-        const result = await pool.query(`
-      SELECT id, category_id, name, description, base_price, 
-             preparation_time_hours, image_url, is_customizable, 
-             is_active, is_featured, created_at, updated_at
-      FROM products
-      WHERE id = $1;
-    `, [id]);
+        const {
+            producto_id,
+            nombre_prod,
+            stock_actual,
+            stock_critico,
+            description,
+            precio_unidad,
+            tiempo_preparacion_min,
+            personalizable,
+            categoria_prod_id,
+            estado_id
+        } = req.body;
 
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'Product not found' });
+        const producto = await Producto.create({
+            product_id: producto_id,
+            product_name: nombre_prod,
+            current_stock: stock_actual || 0,
+            critical_stock: stock_critico || 5,
+            description,
+            unit_price: precio_unidad,
+            preparation_time_min: tiempo_preparacion_min || 0,
+            customizable: personalizable || false,
+            product_category_id: categoria_prod_id,
+            status_id: estado_id || 'active'
+        });
+
+        // Cargar la categoría relacionada
+        await producto.reload({
+            include: [{ model: CategoriaProducto, as: 'categoria' }]
+        });
+
+        res.status(201).json(producto);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Obtener productos por categoría
+export const obtenerProductosPorCategoria = async (req, res) => {
+    try {
+        const { categoriaId } = req.params;
+
+        const productos = await Producto.findByCategoria(categoriaId);
+
+        res.json(productos);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Actualizar stock de un producto
+export const actualizarStock = async (req, res) => {
+    try {
+        const { productoId } = req.params;
+        const { cantidad, tipoMovimiento } = req.body;
+
+        const producto = await Producto.findByPk(productoId);
+
+        if (!producto) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
-        res.json(result.rows[0]);
+
+        await producto.actualizarStock(cantidad, tipoMovimiento);
+
+        res.json(producto);
     } catch (error) {
-        console.error('Error fetching product by ID:', error);
-        res.status(500).json({ error: 'Database Query failed Server Error' });
+        res.status(500).json({ error: error.message });
     }
 };
 
-export const createProduct = async (req, res) => {
-    const {
-      category_id,
-      name,
-      description,
-      base_price,
-      preparation_time_hours = 1,
-      image_url = '',
-      is_customizable = false,
-      is_active = true,
-      is_featured = false
-    } = req.body;
-  
-    const now = new Date(); // current timestamp for created_at and updated_at
-  
-    try {
-      const result = await pool.query(
-        `INSERT INTO products 
-         (category_id, name, description, base_price, preparation_time_hours, image_url, is_customizable, is_active, is_featured, created_at, updated_at)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
-         RETURNING *;`,
-        [
-          category_id,
-          name,
-          description,
-          base_price,
-          preparation_time_hours,
-          image_url,
-          is_customizable,
-          is_active,
-          is_featured,
-          now,
-          now
-        ]
-      );
-  
-      res.status(201).json(result.rows[0]);
-    } catch (error) {
-      console.error('Error creating product:', error);
-      res.status(500).json({ error: 'Database insert failed' });
-    }
-  };
-  
-export const updateProduct = async (req, res) => {  
-    const { id } = req.params;
-  const {
-    category_id,
-    name,
-    description,
-    base_price,
-    preparation_time_hours,
-    image_url,
-    is_customizable,
-    is_active,
-    is_featured
-  } = req.body;
-
-  try {
-    const result = await pool.query(
-      `UPDATE products
-       SET category_id=$1, name=$2, description=$3, base_price=$4, preparation_time_hours=$5,
-           image_url=$6, is_customizable=$7, is_active=$8, is_featured=$9, updated_at=NOW()
-       WHERE id=$10
-       RETURNING *`,
-      [category_id, name, description, base_price, preparation_time_hours, image_url, is_customizable, is_active, is_featured, id]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error('Error updating product:', error);
-    res.status(500).json({ error: 'Database update failed' });
-  }
-}
-
-export const deleteProduct = async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      const result = await pool.query(
-        `DELETE FROM products WHERE id=$1 RETURNING *`,
-        [id]
-      );
-  
-      if (result.rows.length === 0) {
-        return res.status(404).json({ error: 'Product not found' });
-      }
-  
-      res.json({ message: 'Product deleted', product: result.rows[0] });
-    } catch (error) {
-      console.error('Error deleting product:', error);
-      res.status(500).json({ error: 'Database delete failed' });
-    }
-  };
-  
-
+// Si necesitas mantener la exportación por defecto también
+export default {
+    obtenerProductos,
+    crearProducto,
+    obtenerProductosPorCategoria,
+    actualizarStock
+};
