@@ -61,16 +61,14 @@ export const login = async (req, res) => {
 };
 
 
+
 export const register = async (req, res) => {
     try {
-        let { email, password, full_name, phone_number, role_id } = req.body;
+        let { email, password, full_name, phone_number} = req.body;
 
-        // Colocar el rol de cliente si no hay rol en el request
-        if (!role_id) {
-            role_id = await RolUsuario.getRolIdByName("Client");
-        }else{
-            await RolUsuario.findByPk(role_id) ? role_id = role_id : res.status(404).json({error: "No se encontro el rol"});
-        }
+        // Colocar el rol de cliente
+        const role_id = await RolUsuario.getRolIdByName("Client");
+
         // Obtener el estado activo
         const statusId = await Estado.getIdEstadoByEntityAndName("user", "Active");
 
