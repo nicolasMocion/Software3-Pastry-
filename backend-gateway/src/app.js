@@ -52,7 +52,8 @@ app.use('/', routerAuth);
 app.get('/callback',
     passport.authenticate('auth0', { failureRedirect: '/login' }),
     (req, res) => {
-        res.redirect('/');
+        // Usuario autenticado exitosamente (con MFA completado)
+        res.redirect('/dashboard');
     }
 );
 // Ruta de logout
@@ -85,6 +86,7 @@ const startServer = async () => {
             console.log(`Servidor ejecutándose en el puerto ${PORT}`);
             console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);
         });
+
     } catch (error) {
         console.error('No se pudo conectar a la base de datos:', error);
         process.exit(1);

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import axios from 'axios';
 
 export const registerAuth0 = async function (req, res){
-    const { email, password, nombre_completo, telefono, cedula, rol } = req.body;
+    const { email, password, full_name, number, cc, user_rol_id } = req.body;
 
     try {
         // 1. Registrar en Auth0 (solo autenticacion)
@@ -24,10 +24,10 @@ export const registerAuth0 = async function (req, res){
         const user = await Usuario.create({
             auth0_id: auth0Response.data._id,
             email : email,
-            full_name : nombre_completo || email,
-            number : telefono || "",
-            cc : cedula || "",
-            user_role_id: rol || 'rol_cliente'
+            full_name : full_name || email,
+            number : number || "",
+            cc : cc || "",
+            user_role_id: user_rol_id || 'rol_cliente'
         });
 
         // 3. Responder sin información sensible

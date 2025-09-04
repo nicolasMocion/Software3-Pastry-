@@ -25,11 +25,11 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
-routerAuth.get('/login',
-    passport.authenticate('auth0', {
-        scope: 'openid profile email'
-    })
-);
+routerAuth.get('/login', passport.authenticate('auth0', {
+    scope: 'openid profile email'
+}), (req, res) => {
+    res.redirect('/');
+});
 
 routerAuth.post('/registerAuth', authController.registerAuth0)
 

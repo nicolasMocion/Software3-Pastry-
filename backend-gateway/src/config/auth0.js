@@ -12,7 +12,6 @@ const strategy = new Auth0Strategy(
     },
     async (accessToken, refreshToken, extraParams, profile, done) => {
         try {
-            console.log(profile.id);
             // Buscar usuario por auth0_id
             const authId = profile.id.split('|')[1];
             let user = await Usuario.findByAuth0Id(authId);
