@@ -27,13 +27,6 @@ const Usuario = (sequelize) => {
                 notEmpty: true
             }
         },
-        encrypted_password: {
-            type: DataTypes.STRING(300),
-            allowNull: false,
-            validate: {
-                notEmpty: true
-            }
-        },
         phone: {
             type: DataTypes.STRING(20),
             validate: {
@@ -46,30 +39,27 @@ const Usuario = (sequelize) => {
         },
         status_id: {
             type: DataTypes.UUID,
-            allowNull: false
+            allowNull: false,
+            defaultValue: 'est_user_act'
         },
         user_role_id: {
             type: DataTypes.UUID,
-            allowNull: false
+            allowNull: false,
+            defaultValue: 'rol_cliente'
+        },
+        cc : {
+            type: DataTypes.STRING(100),
+            allowNull: false,
+
+        },
+        auth0_id: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
         }
     }, {
         tableName: 'user',
         timestamps: false, // Desactivamos los timestamps automáticos de Sequelize
-        hooks: {
-            //encriptacion de la contraseña
-            beforeCreate: async (usuario) => {
-                if (usuario.encrypted_password) {
-                    const saltRounds = 10;
-                    usuario.encrypted_password = await bcrypt.hash(usuario.encrypted_password, saltRounds);
-                }
-            },
-            beforeUpdate: async (usuario) => {
-                if (usuario.changed('encrypted_password')) {
-                    const saltRounds = 10;
-                    usuario.encrypted_password = await bcrypt.hash(usuario.encrypted_password, saltRounds);
-                }
-            }
-        }
     });
 
     // Metodo para configurar asociaciones
@@ -90,17 +80,21 @@ const Usuario = (sequelize) => {
 
     };
 
-    // Metodo para verificar contraseña
-    User.prototype.validarContrasenia = async function(contrasenia) {
-        return await bcrypt.compare(contrasenia, this.encrypted_password);
-    };
-
-
     // Metodo para ocultar la contraseña en las respuestas
     User.prototype.toJSON = function() {
         const values = Object.assign({}, this.get());
         delete values.encrypted_password;
         return values;
+    };
+
+    // Metodo para encontrar usuario por el id de Auth0
+    User.findByAuth0Id = function(auth0Id) {
+        return this.findOne({ where: { auth0_id: auth0Id } });
+    };
+
+    //Metodo para encontrar usuario por email
+    User.findByEmail = function(email) {
+        return this.findOne({ where: { email } });
     };
 
     return User;

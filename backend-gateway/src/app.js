@@ -2,9 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
+import session from 'express-session';
 import morgan from 'morgan';
-
-import sequelize from './config/db.js';
+import passport from 'passport';
+import { loadUser } from './middlewares/auth.js';
 
 import productsRoutes from './routes/productsRoutes.js';
 //import routerUsuario from './routes/usuarioRoutes.js';
@@ -22,15 +23,47 @@ app.use(helmet());
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+    secret: process.env.SECRET_JWT,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+    }
+))
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(loadUser); // Cargar usuario completo en req.currentUser
+
+
 
 //Hacer asociaciones de los modelos
 import setupAssociations from './model/asociaciones.js';
 setupAssociations();
 
+
 // Routes
+app.get('/', (req, res) => {
+    res.json({ message: 'API de Pastelería con Auth0 y Sequelize' });
+});
 app.use('/api/products', productsRoutes);
-//app.use('/api/usuario', routerUsuario);
-app.use('/api/auth', routerAuth);
+app.use('/', routerAuth);
+
+// Ruta de callback
+app.get('/callback',
+    passport.authenticate('auth0', { failureRedirect: '/login' }),
+    (req, res) => {
+        // Usuario autenticado exitosamente (con MFA completado)
+        res.redirect('/dashboard');
+    }
+);
+// Ruta de logout
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('https://' + process.env.AUTH0_DOMAIN + '/v2/logout?returnTo=' + process.env.LOGOUT_REDIRECT);
+});
+
+// Sincronizar base de datos y iniciar servidor
+import syncDatabase from './scripts/syncDatabase.js';
 
 // Manejo de errores
 app.use((err, req, res, next) => {
@@ -45,7 +78,7 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
     try {
         // Probar conexión a la base de datos
-        await sequelize.authenticate();
+        await syncDatabase();
         console.log('Conexión a la base de datos establecida correctamente.');
 
         // Iniciar servidor
@@ -53,6 +86,7 @@ const startServer = async () => {
             console.log(`Servidor ejecutándose en el puerto ${PORT}`);
             console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);
         });
+
     } catch (error) {
         console.error('No se pudo conectar a la base de datos:', error);
         process.exit(1);
