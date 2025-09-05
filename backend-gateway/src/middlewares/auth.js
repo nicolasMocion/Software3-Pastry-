@@ -16,15 +16,23 @@ import {Usuario} from '../model/autenticacion/index.js';
         res.status(403).json({ error: 'Se requieren permisos de administrador' });
     }
 
-    // Verificar múltiples roles
-    export const requireRoles = async function (roles){
+    // Verificar múltiples roles segun el id de los roles
+    // prestablecidos en la base de datos
+    export const requireRoles = (roles) => {
         return (req, res, next) => {
-            if (req.isAuthenticated() && roles.includes(req.user.user_role_id)) {
-                return next();
-            }
-            res.status(403).json({ error: 'Permisos insuficientes' });
-        };
-    }
+        // Verificar si el usuario está autenticado
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ error: 'No autenticado' });
+        }
+
+        // Verificar si el usuario tiene al menos uno de los roles requeridos
+        if (!roles.includes(req.user.user_rol_id)) {
+            return res.status(403).json({ error: 'Permisos insuficientes' });
+        }
+        // Si todo está bien, continuar
+        next();
+    };
+};
 
     // Middleware para cargar usuario completo en req
     export const loadUser = async function (req, res, next) {

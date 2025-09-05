@@ -1,4 +1,5 @@
-import { Producto, CategoriaProducto } from '../model/inventario/index.js';
+import { Producto, CategoriaProducto, ImagenProducto } from '../model/inventario/index.js';
+import {cloudinary} from "../config/cloudinary.js";
 
 // Obtener todos los productos con sus categorías
 export const obtenerProductos = async (req, res) => {
@@ -12,6 +13,72 @@ export const obtenerProductos = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+};
+
+export const crearProductoImages = async (req, res) => {
+    try {
+        // 1. Extraer datos del producto del cuerpo de la solicitud
+        const { product_name, current_stock, critical_stock,description,
+            unit_price, preparation_time_in, customizable, product_category_id} = req.body;
+
+        // 2. Insertar el producto en la base de datos
+        const newProduct = await Producto.create({
+            product_name : product_name,
+            current_stock : current_stock,
+            critical_stock : critical_stock,
+            description : description,
+            unit_price : unit_price,
+            preparation_time_in: preparation_time_in,
+            customizable : customizable,
+            product_category_id:product_category_id,
+        })
+
+        // 3. Procesar las imágenes
+        const imagenes = req.files;
+        const imagenesInsertadas = [];
+
+        for (let i = 0; i < imagenes.length; i++) {
+            const imagen = imagenes[i];
+            // Subir imagen a Cloudinary
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    {folder: 'Pastry/'},
+                    (error, result) => {
+                        if (error) reject(error);
+                        else resolve(result);
+                    }
+                );
+                stream.end(imagen.buffer);
+            });
+
+
+            // Insertar metadata de la imagen en la base de datos
+            const esPrincipal = i === 0; // La primera imagen como principal
+            const imagenQuery = await ImagenProducto.create({
+                product_id : newProduct.id,
+                cloudinary_id: result.public_id,
+                image_url : result.secure_url,
+                is_main: esPrincipal,
+                order_index : i,
+            })
+        }
+
+        res.status(201).json({
+            success: true,
+            product: {
+                ...newProduct,
+                images: imagenesInsertadas
+            }
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al crear el producto'
+        });
+    }
+
 };
 
 // Crear un nuevo producto

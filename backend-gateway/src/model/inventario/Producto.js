@@ -3,7 +3,9 @@ import { DataTypes } from 'sequelize';
 const Producto = (sequelize) => {
     const Product = sequelize.define('Product', {
         product_id: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.UUID,
+            //automaticamente se crea un UUID
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
             allowNull: false
         },
@@ -61,7 +63,8 @@ const Producto = (sequelize) => {
             type: DataTypes.STRING(50)
         },
         status_id: {
-            type: DataTypes.STRING(50)
+            type: DataTypes.STRING(50),
+            defaultValue: 'est_prod_act'
         }
     }, {
         tableName: 'product',
@@ -83,7 +86,7 @@ const Producto = (sequelize) => {
         ]
     });
 
-    // Método para configurar asociaciones
+    // Metodo para configurar asociaciones
     Product.associate = function(models) {
         // Un producto pertenece a una categoría
         Product.belongsTo(models.CategoriaProducto, {

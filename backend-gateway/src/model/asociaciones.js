@@ -1,7 +1,6 @@
 import { Usuario } from '../model/autenticacion/index.js';
-import {Estado} from '../model/catalogo/index.js';
-import { Producto, CategoriaProducto } from '../model/inventario/index.js';
-//const { Producto, MovimientoProducto, MovimientoInsumo } = require('./inventario');
+import {Estado, TipoMovimiento} from '../model/catalogo/index.js';
+import { Producto, CategoriaProducto, MovimientoProducto, MovimientoInsumo } from '../model/inventario/index.js';
 //const { Pedido, DetallePedido, Pago, Venta } = require('./pedidos');
 //const { SeguimientoPedido, ComprobantePedido, IncidentePedido, Ubicacion } = require('./seguimiento');
 //const { EstadoAlertaStock, MedioPago, TipoIncidente } = require('./catalogo');
@@ -22,18 +21,23 @@ function setupAssociations() {
 
     // ... otras asociaciones con Estado
 
+    //==================== RELACION TIPO MOVIMIENTO CON MOVIMIENTOS==========================
 
+    TipoMovimiento.hasMany(MovimientoProducto, { foreignKey: 'movement_type_id', sourceKey: 'movement_type_id', as: 'producto' });
+    MovimientoProducto.belongsTo(TipoMovimiento, {
+        foreignKey: 'movement_type_id',
+        targetKey: 'movement_type_id',
+        as: 'movement_type'
+    });
 
     // ==================== ASOCIACIONES DE MOVIMIENTOS CON USUARIO ====================
 
-/*
     // MovimientoProducto → Usuario (quien realizó el movimiento)
     MovimientoProducto.belongsTo(Usuario, {
         foreignKey: 'user_id',
         targetKey: 'user_id',
         as: 'usuario'
     });
-
     Usuario.hasMany(MovimientoProducto, {
         foreignKey: 'user_id',
         sourceKey: 'user_id',
@@ -52,7 +56,7 @@ function setupAssociations() {
         sourceKey: 'user_id',
         as: 'movimientosInsumo'
     });
-*/
+
 
     // ==================== ASOCIACIONES DE INVENTARIO CON OTROS PROCESOS ====================
     /*

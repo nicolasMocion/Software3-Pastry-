@@ -42,11 +42,11 @@ setupAssociations();
 
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/',(req, res) => {
     res.json({ message: 'API de Pastelería con Auth0 y Sequelize' });
 });
 app.use('/api/products', productsRoutes);
-app.use('/', routerAuth);
+app.use('/auth', routerAuth);
 
 // Ruta de callback
 app.get('/callback',
