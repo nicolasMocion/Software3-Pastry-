@@ -1,11 +1,9 @@
 import { Router } from 'express';
 import * as authController from '../controllers/authController.js';
-import {verifyToken} from '../middlewares/index.js';
 import passport from 'passport'
 import {Usuario} from "../model/autenticacion/index.js";
 
 const routerAuth = Router();
-
 
 // Configurar Passport
 import {strategy} from '../config/auth0.js';
@@ -15,7 +13,6 @@ passport.use(strategy);
 passport.serializeUser((user, done) => {
     done(null, user.user_id);
 });
-
 passport.deserializeUser(async (id, done) => {
     try {
         const user = await Usuario.findByPk(id);
@@ -30,10 +27,6 @@ routerAuth.get('/login', passport.authenticate('auth0', {
 }), (req, res) => {
     res.redirect('/');
 });
-
-routerAuth.post('/registerAuth', authController.registerAuth0)
-
-
-routerAuth.post('/register', verifyToken, authController.register);
+routerAuth.post('/registerAuth', authController.registerAuth0);
 
 export default routerAuth;

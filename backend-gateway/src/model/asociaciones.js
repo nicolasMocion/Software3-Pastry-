@@ -1,9 +1,7 @@
 import { Usuario } from '../model/autenticacion/index.js';
 import {Estado, TipoMovimiento} from '../model/catalogo/index.js';
-import { Producto, CategoriaProducto, MovimientoProducto, MovimientoInsumo } from '../model/inventario/index.js';
-//const { Pedido, DetallePedido, Pago, Venta } = require('./pedidos');
-//const { SeguimientoPedido, ComprobantePedido, IncidentePedido, Ubicacion } = require('./seguimiento');
-//const { EstadoAlertaStock, MedioPago, TipoIncidente } = require('./catalogo');
+import { Producto, MovimientoProducto, MovimientoInsumo, Menu} from '../model/inventario/index.js';
+import AlertaStockProducto from "./inventario/AlertaStockProducto.js";
 
 function setupAssociations() {
     console.log('Configurando asociaciones entre procesos...');
@@ -14,6 +12,7 @@ function setupAssociations() {
 
     Producto.belongsTo(Estado, { foreignKey: 'status_id', targetKey: 'status_id', as: 'estado' });
     Estado.hasMany(Producto, { foreignKey: 'status_id', sourceKey: 'status_id', as: 'productos' });
+
 /*
     Pedido.belongsTo(Estado, { foreignKey: 'status_id', targetKey: 'status_id', as: 'estado' });
     Estado.hasMany(Pedido, { foreignKey: 'status_id', sourceKey: 'status_id', as: 'pedidos' });
@@ -22,9 +21,15 @@ function setupAssociations() {
     // ... otras asociaciones con Estado
 
     //==================== RELACION TIPO MOVIMIENTO CON MOVIMIENTOS==========================
-
     TipoMovimiento.hasMany(MovimientoProducto, { foreignKey: 'movement_type_id', sourceKey: 'movement_type_id', as: 'producto' });
     MovimientoProducto.belongsTo(TipoMovimiento, {
+        foreignKey: 'movement_type_id',
+        targetKey: 'movement_type_id',
+        as: 'movement_type'
+    });
+
+    TipoMovimiento.hasMany(MovimientoInsumo, { foreignKey: 'movement_type_id', sourceKey: 'movement_type_id', as: 'tipoMovimiento' });
+    MovimientoInsumo.belongsTo(TipoMovimiento, {
         foreignKey: 'movement_type_id',
         targetKey: 'movement_type_id',
         as: 'movement_type'
@@ -50,11 +55,22 @@ function setupAssociations() {
         targetKey: 'user_id',
         as: 'usuario'
     });
-
     Usuario.hasMany(MovimientoInsumo, {
         foreignKey: 'user_id',
         sourceKey: 'user_id',
         as: 'movimientosInsumo'
+    });
+
+    //Catalogo -> Usuario (Quien)
+    Menu.belongsTo(Usuario, {
+        foreignKey: 'user_id',
+        targetKey: 'user_id',
+        as: 'creator'
+    });
+    Usuario.hasMany(Menu, {
+        foreignKey: 'user_id',
+        sourceKey: 'user_id',
+        as: 'created_menus'
     });
 
 

@@ -8,6 +8,7 @@ import passport from 'passport';
 import { loadUser } from './middlewares/auth.js';
 
 import productsRoutes from './routes/productsRoutes.js';
+import rolesRoutes from './routes/roleRoutes.js';
 //import routerUsuario from './routes/usuarioRoutes.js';
 import routerAuth from "./routes/authRoutes.js";
 
@@ -35,7 +36,6 @@ app.use(passport.session());
 app.use(loadUser); // Cargar usuario completo en req.currentUser
 
 
-
 //Hacer asociaciones de los modelos
 import setupAssociations from './model/asociaciones.js';
 setupAssociations();
@@ -47,7 +47,7 @@ app.get('/',(req, res) => {
 });
 app.use('/api/products', productsRoutes);
 app.use('/auth', routerAuth);
-
+app.use('role',rolesRoutes);
 // Ruta de callback
 app.get('/callback',
     passport.authenticate('auth0', { failureRedirect: '/login' }),
@@ -62,6 +62,7 @@ app.get('/logout', (req, res) => {
     res.redirect('https://' + process.env.AUTH0_DOMAIN + '/v2/logout?returnTo=' + process.env.LOGOUT_REDIRECT);
 });
 
+
 // Sincronizar base de datos y iniciar servidor
 import syncDatabase from './scripts/syncDatabase.js';
 
@@ -73,6 +74,7 @@ app.use((err, req, res, next) => {
         message: process.env.NODE_ENV === 'development' ? err.message : 'Ocurrió un error'
     });
 });
+
 
 // Inicializar servidor
 const startServer = async () => {

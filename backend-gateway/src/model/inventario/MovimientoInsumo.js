@@ -78,20 +78,6 @@ const MovimientoInsumo = (sequelize) => {
             as: 'supply'
         });
 
-        // Un movimiento de suministro pertenece a un tipo de movimiento
-        SupplyMovement.belongsTo(models.TipoMovimiento, {
-            foreignKey: 'movement_type_id',
-            targetKey: 'movement_type_id',
-            as: 'movement_type'
-        });
-
-        // Un movimiento de suministro pertenece a un usuario
-        SupplyMovement.belongsTo(models.Usuario, {
-            foreignKey: 'user_id',
-            targetKey: 'user_id',
-            as: 'user'
-        });
-
         // Un movimiento de suministro puede tener una unidad de medida
         SupplyMovement.belongsTo(models.UnidadMedida, {
             foreignKey: 'unit_of_measure_id',

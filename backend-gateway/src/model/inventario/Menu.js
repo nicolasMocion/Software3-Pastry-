@@ -49,13 +49,6 @@ const Menu = (sequelize) => {
     });
 
     Menu.associate = function(models) {
-        // Un menú pertenece a un usuario (creador/modificador)
-        Menu.belongsTo(models.Usuario, {
-            foreignKey: 'user_id',
-            targetKey: 'user_id',
-            as: 'creator'
-        });
-
         // Un menú puede tener muchos items en el catálogo
         Menu.hasMany(models.Catalogo, {
             foreignKey: 'menu_id',

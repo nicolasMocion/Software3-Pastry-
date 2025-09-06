@@ -84,14 +84,14 @@ const AlertaStockProducto = (sequelize) => {
         });
 
         // Una alerta de stock pertenece a un estado de alerta
-        ProductStockAlert.belongsTo(models.Estado, {
+        ProductStockAlert.belongsTo(models.EstadoAlertaStock, {
             foreignKey: 'stock_alert_status_id',
-            targetKey: 'status_id',
+            targetKey: 'stock_alert_status_id',
             as: 'status'
         });
 
         // Una alerta de stock puede estar relacionada con un movimiento de producto
-        ProductStockAlert.belongsTo(models.prod, {
+        ProductStockAlert.belongsTo(models.MovimientoProducto, {
             foreignKey: 'product_movement_id',
             targetKey: 'product_movement_id',
             as: 'product_movement'

@@ -99,7 +99,7 @@ const AlertaStockInsumo = (sequelize) => {
         });
 
         // Una alerta de stock pertenece a un estado de alerta
-        SupplyStockAlert.belongsTo(models.Estado, {
+        SupplyStockAlert.belongsTo(models.EstadoAlertaStock, {
             foreignKey: 'stock_alert_status_id',
             targetKey: 'stock_alert_status_id',
             as: 'status'

@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 
-const UnidaMedida = (sequelize) => {
+const UnidadMedida = (sequelize) => {
     const UnitOfMeasure = sequelize.define('unit_of_measure', {
         unit_of_measure_id: {
             type: DataTypes.UUID,
@@ -96,4 +96,4 @@ const UnidaMedida = (sequelize) => {
     return UnitOfMeasure;
 };
 
-export default UnidaMedida;
+export default UnidadMedida;
