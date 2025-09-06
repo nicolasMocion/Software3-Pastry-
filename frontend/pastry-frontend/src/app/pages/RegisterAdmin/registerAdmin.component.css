@@ -1,0 +1,89 @@
+.register-hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f8b500, #ec6f66);
+}
+
+.register-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.register-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.register-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #444;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #f8b500;
+}
+
+.btn.register-btn {
+  margin-top: 1.5rem;
+  width: 100%;
+  padding: 0.9rem;
+  background: #f8b500;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn.register-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn.register-btn:hover:not(:disabled) {
+  background: #ec6f66;
+}
+
+.login-link {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: #f8b500;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+.error {
+  color: #e63946;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}

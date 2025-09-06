@@ -1,0 +1,36 @@
+<div class="register-hero">
+  <div class="register-container">
+    <div class="register-card">
+      <h2 class="register-title">Register</h2>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <label for="name">Full Name</label>
+        <input type="text" id="name" formControlName="name" placeholder="Enter your full name" required />
+        <div class="error" *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid">
+          Name is required (min 2 characters).
+        </div>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" placeholder="Enter your email" required />
+        <div class="error" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+          Enter a valid email.
+        </div>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" placeholder="Enter your password" required />
+        <div class="error" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+          Password must be at least 6 characters.
+        </div>
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm your password" required />
+        <div class="error" *ngIf="registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched">
+          Passwords do not match.
+        </div>
+
+        <button type="submit" class="btn register-btn" [disabled]="registerForm.invalid">Register</button>
+      </form>
+      <a routerLink="/login" class="login-link">Already have an account? Login</a>
+    </div>
+  </div>
+</div>
