@@ -49,7 +49,7 @@ const Usuario = (sequelize) => {
         },
         cc : {
             type: DataTypes.STRING(100),
-            allowNull: false,
+            allowNull: true,
 
         },
         auth0_id: {

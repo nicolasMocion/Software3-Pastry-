@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {RouterLink} from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { AuthService, RegisterPayload } from '../../services/auth.service'; // maybe rename
 
 @Component({
   selector: 'app-register',
@@ -13,8 +14,11 @@ import {RouterLink} from '@angular/router';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+  loading = false;
+  successMessage = '';
+  errorMessage = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService) {
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
@@ -31,8 +35,28 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      console.log('Register form data:', this.registerForm.value);
-      // TODO: Call your backend service to register user
+      this.loading = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+
+      const payload: RegisterPayload = {
+        name: this.registerForm.value.name,
+        email: this.registerForm.value.email,
+        password: this.registerForm.value.password,
+        confirmPassword: this.registerForm.value.confirmPassword
+      };
+
+      this.authService.register(payload).subscribe({
+        next: (res) => {
+          this.loading = false;
+          this.successMessage = 'User registered successfully!';
+          this.registerForm.reset();
+        },
+        error: (err) => {
+          this.loading = false;
+          this.errorMessage = err.error?.message || 'Registration failed.';
+        }
+      });
     }
   }
 }

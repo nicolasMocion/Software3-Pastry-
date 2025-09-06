@@ -1,7 +1,7 @@
 export const environment = {
-  production: false,  //To replace with the actual values form the .env
+  production: false,
   auth0: {
-    domain: 'YOUR_AUTH0_DOMAIN',
-    clientId: 'YOUR_AUTH0_CLIENT_ID',
+    domain: 'dev-thqrytg0mfszr5ku.us.auth0.com',
+    clientId: 'FK64cIU8PNvgLI6TVN7LD70wWlXMj1oj',
   }
 };
